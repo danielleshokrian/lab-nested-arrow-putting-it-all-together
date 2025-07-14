@@ -1,24 +1,45 @@
 function createLoginTracker(userInfo) {
+  if (
+    typeof userInfo !== 'object' ||
+    typeof userInfo.username !== 'string' ||
+    typeof userInfo.password !== 'string'
+  ) {
+    throw new Error("Invalid userInfo: must be an object with 'username' and 'password' as strings.");
+  }
+
   let attemptCount = 0;
 
-  const loginAttempt = (passwordAttempt) => {
-    if (failedAttempts >= 3) {
+  
+  return (passwordAttempt) => {
+    
+    if (attemptCount >= 3) {
       return 'Account locked due to too many failed login attempts';
     }
 
+    
     if (passwordAttempt === userInfo.password) {
       return 'Login successful';
     } else {
-      failedAttempts += 1;
-      if (failedAttempts >= 3) {
+      
+      attemptCount += 1;
+
+      
+      if (attemptCount >= 3) {
         return 'Account locked due to too many failed login attempts';
       }
-      return `Login failed`;
+
+      
+      return `Attempt ${attemptCount}: Login failed`;
     }
+  
   };
 
   return loginAttempt;
 }
+const login = createLoginTracker({ username: "user1", password: "pass123" });
+
+console.log(login("wrong")); 
+
 
 
 
